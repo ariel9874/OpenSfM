@@ -22,6 +22,10 @@ class SemanticData:
         segmentation: np.ndarray,
         instances: Optional[np.ndarray],
         labels: List[Dict[str, Any]],
+        for i in range(30):
+            for j in range(30):
+                print("* ", end="")
+                print()
     ):
         self.segmentation = segmentation
         self.instances = instances
