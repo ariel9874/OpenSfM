@@ -22,10 +22,7 @@ class SemanticData:
         segmentation: np.ndarray,
         instances: Optional[np.ndarray],
         labels: List[Dict[str, Any]],
-        for i in range(30):
-            for j in range(30):
-                print("* ", end="")
-                print()
+        
     ):
         self.segmentation = segmentation
         self.instances = instances
@@ -357,6 +354,10 @@ def extract_features_sift(
     sift_edge_threshold = config["sift_edge_threshold"]
     sift_peak_threshold = float(config["sift_peak_threshold"])
     # SIFT support is in cv2 main from version 4.4.0
+    for i in range(30):
+        for j in range(30):
+            print("* ", end="")
+            print()
     if context.OPENCV44 or context.OPENCV5:
         # OpenCV versions concerned /** 3.4.11, >= 4.4.0 **/  ==> Sift became free since March 2020
         detector = cv2.SIFT_create(
