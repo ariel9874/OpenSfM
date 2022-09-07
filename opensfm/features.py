@@ -3,7 +3,7 @@
 import logging
 import time
 from typing import Tuple, Dict, Any, List, Optional
-import log        
+     
 import cv2
 import numpy as np
 from opensfm import context, pyfeatures
