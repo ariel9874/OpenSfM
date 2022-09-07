@@ -8,7 +8,6 @@ import cv2
 import numpy as np
 from opensfm import context, pyfeatures
 
-
 logger: logging.Logger = logging.getLogger(__name__)
 
 
