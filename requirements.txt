@@ -19,3 +19,7 @@ beautifulsoup4==4.9.1
 lxml==4.5.1
 wheel
 opencv-python==4.5.1.48 ; sys_platform == "win32"
+torch>=1.1
+torchvision>=0.3
+tqdm>=4.36.0
+

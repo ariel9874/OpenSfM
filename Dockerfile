@@ -19,6 +19,9 @@ RUN apt-get update \
         python3-scipy \
         python3-yaml \
         curl \
+        torch>=1.1\
+        torchvision>=0.3\
+        matplotlib\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
