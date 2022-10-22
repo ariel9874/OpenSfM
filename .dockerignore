@@ -15,6 +15,7 @@
 !requirements.txt
 !setup.cfg
 !setup.py
+!superpoint_v1.pth 
 !viewer
 
 # Picking exceptions
