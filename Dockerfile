@@ -1,8 +1,13 @@
-FROM nvidia/cuda:11.3.0-devel-ubuntu20.04
+FROM nvidia/cuda:11.6.0-devel-ubuntu20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install apt-getable dependencies
+RUN apt-key del 7fa2af80
+RUN apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
+RUN apt-get update -y
+RUN apt-get install -y unzip wget software-properties-common
+
 RUN apt-get update \
     && apt-get install -y \
         build-essential \
@@ -19,16 +24,14 @@ RUN apt-get update \
         python3-scipy \
         python3-yaml \
         curl \
-        torch\
-        torchvision\
-        matplotlib\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
 COPY . /source/OpenSfM
+COPY superpoint_v1.pth /source/OpenSfM
 
 WORKDIR /source/OpenSfM
-
+RUN pip3 install torch torchvision torchaudio  --extra-index-url https://download.pytorch.org/whl/cu116
 RUN pip3 install -r requirements.txt && \
     python3 setup.py build
