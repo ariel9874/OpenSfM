@@ -808,7 +808,7 @@ def extract_features_superpoint(
     if desc is not None:
         if config["feature_root"]:
             desc = root_feature(desc)
-        points = np.array([(i.pt[0], i.pt[1], i.size, i.angle) for i in points])
+        points = np.array([(i.pt[0], i.pt[1], 3.24211621, i[2]]) for i in points])
     else:
         points = np.array(np.zeros((0, 3)))
         desc = np.array(np.zeros((0, 3)))
