@@ -804,14 +804,6 @@ def extract_features_superpoint(
                           cuda=True)
     image = (image.astype('float32') / 255.)
     points, desc, heatmap = fe.run(image)
-
-    if desc is not None:
-        if config["feature_root"]:
-            desc = root_feature(desc)
-        points = np.array([(i[0], i[1], 3.24211621, i[2]]) for i in points])
-    else:
-        points = np.array(np.zeros((0, 3)))
-        desc = np.array(np.zeros((0, 3)))
     return points, desc
 def extract_features_popsift(
     image: np.ndarray, config: Dict[str, Any], features_count: int
