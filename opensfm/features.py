@@ -808,7 +808,7 @@ def extract_features_superpoint(
     if desc is not None:
         if config["feature_root"]:
             desc = root_feature(desc)
-        points = np.array([(i.pt[0], i.pt[1], 3.24211621, i[2]]) for i in points])
+        points = np.array([(i[0], i[1], 3.24211621, i[2]]) for i in points])
     else:
         points = np.array(np.zeros((0, 3)))
         desc = np.array(np.zeros((0, 3)))
@@ -1018,7 +1018,7 @@ def extract_features(
 
     keypoints = None
     feature_type = config["feature_type"].upper()
-    if feature_type == "SIFT2":
+    if feature_type == "SIFT":
         points, desc = extract_features_sift(image_gray, config, features_count)
     elif feature_type == "SURF":
         points, desc = extract_features_surf(image_gray, config, features_count)
@@ -1030,11 +1030,11 @@ def extract_features(
         points, desc = extract_features_orb(image_gray, config, features_count)
     elif feature_type == 'SIFT_GPU':
         points, desc = extract_features_popsift(image_gray, config, features_count)
-    elif feature_type=="SIFT":
+    elif feature_type=="SUPER_POINT":
         points,desc=extract_features_superpoint(image_gray, config, features_count)
     else:
         raise ValueError(
-            "Unknown feature type " "(must be SURF, SIFT, AKAZE, HAHOG, SIFT_GPU or ORB)"
+            "Unknown feature type " "(must be SURF, SIFT, AKAZE, HAHOG, SIFT_GPU, SUPER_POINT or ORB)"
         )
 
     xs = points[:, 0].round().astype(int)
