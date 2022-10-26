@@ -8,7 +8,7 @@ import gdown
 
 from ..utils.base_model import BaseModel
 
-dir_path = Path(__file__).parent / '../../third_party/deep-image-retrieval'
+dir_path = Path(__file__).parent / '../../src/third_party/deep-image-retrieval'
 sys.path.append(str(dir_path))
 os.environ['DB_ROOT'] = ''  # required by dirtorch
 

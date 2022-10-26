@@ -12,7 +12,7 @@ from ..utils.base_model import BaseModel
 
 logger = logging.getLogger(__name__)
 
-netvlad_path = Path(__file__).parent / '../../third_party/netvlad'
+netvlad_path = Path(__file__).parent / '../../src/third_party/netvlad'
 
 EPS = 1e-6
 

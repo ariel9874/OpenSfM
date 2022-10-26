@@ -804,6 +804,14 @@ def extract_features_superpoint(
                           cuda=True)
     image = (image.astype('float32') / 255.)
     points, desc, heatmap = fe.run(image)
+    if desc is not None:
+        if config["feature_root"]:
+            desc = root_feature(desc)
+        points = np.array([(i[0], i[1], i[2], i[3]) for i in points])
+    else:
+        points = np.array(np.zeros((0, 3)))
+        desc = np.array(np.zeros((0, 3)))
+
     return points, desc
 def extract_features_popsift(
     image: np.ndarray, config: Dict[str, Any], features_count: int
@@ -962,7 +970,32 @@ def extract_features_orb(
 
     logger.debug("Found {0} points in {1}s".format(len(points), time.time() - t))
     return points, desc
+def extract_featuressift(image):
+    sift = cv2.xfeatures2d.SIFT_create()
+    kp, des = sift.detectAndCompute(image,None)
+    return kp, des
+def extract_featurestorch(
+    image: np.ndarray, config: Dict[str, Any], features_count: int
+) -> Tuple[np.ndarray, np.ndarray]:
+    t = time.time()
+    points, desc = pyfeatures.torch(
+        image.astype(np.float32) / 255,  # VlFeat expects pixel values between 0, 1
+        peak_threshold=config["hahog_peak_threshold"],
+        edge_threshold=config["hahog_edge_threshold"],
+        target_num_features=features_count,
+    )
 
+    if config["feature_root"]:
+        desc = np.sqrt(desc)
+        uchar_scaling = 362  # x * 512 < 256  =>  sqrt(x) * 362 < 256
+    else:
+        uchar_scaling = 512
+
+    if config["hahog_normalize_to_uchar"]:
+        desc = (uchar_scaling * desc).clip(0, 255).round()
+
+    logger.debug("Found {0} points in {1}s".format(len(points), time.time() - t))
+    return points, desc
 
 def extract_features(
     image: np.ndarray, config: Dict[str, Any], is_panorama: bool

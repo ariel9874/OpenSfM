@@ -50,7 +50,6 @@ def match_images(
         data,
         config_override,
     )
-
     # Match them !
     return (
         match_images_with_pairs(data, config_override, exifs, pairs),

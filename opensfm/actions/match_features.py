@@ -3,6 +3,7 @@ from timeit import default_timer as timer
 from opensfm import io
 from opensfm import matching
 from opensfm.dataset_base import DataSetBase
+from opensfm import posetorch
 
 
 def run_dataset(data: DataSetBase) -> None:

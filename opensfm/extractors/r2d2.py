@@ -4,7 +4,7 @@ import torchvision.transforms as tvf
 
 from ..utils.base_model import BaseModel
 
-r2d2_path = Path(__file__).parent / "../../third_party/r2d2"
+r2d2_path = Path(__file__).parent / "../../src/third_party/r2d2"
 sys.path.append(str(r2d2_path))
 from extract import load_network, NonMaxSuppression, extract_multiscale
 
