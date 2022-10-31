@@ -4,6 +4,7 @@ from opensfm import io
 from opensfm import matching
 from opensfm.dataset_base import DataSetBase
 from opensfm import posetorch
+from opensfm.extractors import superpoint
 
 
 def run_dataset(data: DataSetBase) -> None:
@@ -12,7 +13,7 @@ def run_dataset(data: DataSetBase) -> None:
     images = data.images()
 
     start = timer()
-    pairs_matches, preport = matching.match_images(data, {}, images, images)
+    pairs_matches, preport = matching.match_images(data, {}, images, images,pose)
     matching.save_matches(data, images, pairs_matches)
     matching.clear_cache()
     end = timer()

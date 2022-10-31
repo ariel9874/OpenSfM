@@ -78,6 +78,12 @@ class OpenSfMConfig:
     hahog_normalize_to_uchar: bool = True
 
     ##################################
+    # Params for SuperPoint
+    ##################################
+    SuperPoint_model= 'nearest_neighbor'
+    SuperPoint_do_mutual_check= True
+    SuperPoint_distance_threshold= 0.7
+    ##################################
     # Params for general matching
     ##################################
     # Ratio test for matches

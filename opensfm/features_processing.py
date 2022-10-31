@@ -279,6 +279,7 @@ def detect(
 
     size = p_unsorted[:, 2]
     order = np.argsort(size)
+    
     p_sorted = p_unsorted[order, :]
     f_sorted = f_unsorted[order, :]
     c_sorted = c_unsorted[order, :]
