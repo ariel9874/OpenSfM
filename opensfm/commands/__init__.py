@@ -1,5 +1,6 @@
 from . import (
     align_submodels,
+    Ariel,
     bundle,
     compute_depthmaps,
     compute_statistics,
@@ -29,6 +30,7 @@ from .command_runner import command_runner
 
 opensfm_commands = [
     extract_metadata,
+    Ariel,
     detect_features,
     match_features,
     create_rig,

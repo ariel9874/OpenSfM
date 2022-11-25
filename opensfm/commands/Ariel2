@@ -1,0 +1,154 @@
+from opensfm.actions import compute_depthmaps
+import os
+from opensfm import dataset
+from opensfm import dense
+from opensfm.dataset import DataSet
+from . import command
+import argparse
+from opensfm.dataset import DataSet
+import cv2
+import numpy as np
+from opensfm import (
+    log,
+    matching,
+    multiview,
+    pybundle,
+    pygeometry,
+    pymap,
+    pysfm,
+    align,
+    reconstruction_helpers as helpers,
+    rig,
+    tracking,
+    types,)
+def estimate_depth(map, x, y, steps):
+    step = 1
+    depth = map[x][y]
+    print('point depth')
+    print(depth)
+    if depth != 0.0:
+        while(step <= steps):
+            sum = 0
+            devisor = 0
+            for i in range(x-step, x+step+1):
+                devisor += 1
+                for j in range(y-step, y+step+1):
+                    sum = sum + map[i][j]
+                    devisor += 1
+            average = sum / devisor
+            if depth != 0:
+                depth = (depth + average) / 2
+            else:
+                depth = average
+            
+            print('average depth')
+            print(depth)
+            step += 1
+    return depth
+class Command(command.CommandBase):
+    name = "ariel"
+    help = "Compute depthmap2"
+
+    def run_impl(self, data: DataSet, args: argparse.Namespace) -> None:
+        udata_path = os.path.join(data.data_path, args.subfolder)
+        udataset = dataset.UndistortedDataSet(data, udata_path, io_handler=data.io_handler)
+        data.config["interactive"] = args.interactive
+        reconstructions = udataset.load_undistorted_reconstruction()
+        tracks_manager = udataset.load_undistorted_tracks_manager()
+        dense.compute_depthmaps(udataset, tracks_manager, reconstructions[0])
+        
+        report = {}
+        config = data.config
+        images = tracks_manager.get_shot_ids()
+        data.init_reference(images)
+
+        remaining_images = set(images)
+        gcps = data.load_ground_control_points()
+        common_tracks = tracking.all_common_tracks_with_features(tracks_manager)
+        for reconstruction in reconstructions:
+            shot= reconstruction.shots["01.jpg"]
+            """print("shot",shot)
+            p1 = shot.pose.get_origin()
+            print("p1",p1)
+            x=1024
+            print("x",x)
+            y=1024
+            print("y",y)
+            p2 = shot.camera.pixel_to_normalized_coordinates([x, y])
+            print("p2",p2)
+            bearing = shot.camera.pixel_bearing(p2)
+            print("bearing",bearing)
+            scale = 1 / bearing[2]
+            print("scale",scale)
+            bearing = scale * bearing
+            print("bearing scale",bearing)
+            p2 = shot.pose.inverse().transform(bearing)
+            print("p2 inverse",p2)
+            points, normals, colors, labels = udataset.load_point_cloud(shot.id)
+            #points=np.asarray(points)
+            print("points",points)
+            res = np.linalg.norm(np.cross(p2-p1, p1-points), axis=1)/np.linalg.norm(p2-p1)
+            print("res",res)"""
+            for i in range(500,530):
+                p1 = shot.pose.get_origin()
+                print("p1",p1)
+                x=i
+                print("x",x)
+                y=i
+                print("y",y)
+                camera = shot.camera
+                pt2d = camera.pixel_to_normalized_coordinates((x, y))
+                print("pt2d",pt2d)
+                # bearing
+                bearing = camera.pixel_bearing(pt2d)
+                print('\nBearing')
+                print(bearing)
+                # bearing /= bearing[2]
+
+                # Camera Dimensions
+                print('\nCamera Dimensions')
+                print(f'{camera.width} x {camera.width}')
+
+                # Load depthmap dataset
+                dMap, plane, score, nghbr, nghbrs = udataset.load_raw_depthmap(shot.id)
+                print('\nDepthmap Size')
+                print(f'{dMap[0].size} x {dMap[1].size}')
+
+                print('\nMax of camera width/height') 
+                m = max(camera.width, camera.height)
+                print(m)
+
+                print('\nScaling for X/Y')
+                scaleX = dMap[0].size / m
+                scaleY = dMap[1].size / m
+                print(f'{scaleX} / {scaleY}')
+
+                print('\nDepth Coordinates')
+                dx = int(round((scaleX * float(x)), 1))
+                dy = int(round((scaleY * float(y)), 1))
+                print(f'{dx} x {dy}')
+
+                print('\nPoint Depth')
+                depth = dMap[dx][dy]
+                if (depth == 0.0):
+                    depth = estimate_depth(dMap, dx, dy, 2)
+                print(depth)
+                
+                # adjust depth
+                pt3d = bearing * depth
+                print('\nPoint 3D (bearing * depth)')
+                print(pt3d)
+
+                ############################################################################################################
+
+    def add_arguments_impl(self, parser: argparse.ArgumentParser) -> None:
+        parser.add_argument(
+            "--subfolder",
+            help="undistorted subfolder where to load and store data",
+            default="undistorted",
+        )
+        parser.add_argument(
+            "--interactive",
+            help="plot results as they are being computed",
+            action="store_true",
+        )

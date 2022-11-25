@@ -12,3 +12,5 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 "$DIR"/opensfm mesh "$1"
 "$DIR"/opensfm undistort "$1"
 "$DIR"/opensfm compute_depthmaps "$1"
+"$DIR"/opensfm Ariel "$1"
+

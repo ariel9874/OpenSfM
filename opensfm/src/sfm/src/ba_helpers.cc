@@ -651,6 +651,7 @@ py::dict BAHelpers::Bundle(
 
       if (config["bundle_use_gps"].cast<bool>()) {
         const auto pos = shot.GetShotMeasurements().gps_position_;
+        const auto poss =shot.map..
         const auto acc = shot.GetShotMeasurements().gps_accuracy_;
         if (pos.HasValue() && acc.HasValue()) {
           average_position += pos.Value();
